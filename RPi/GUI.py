@@ -1,14 +1,12 @@
 import tkinter as tk
 import cv2
 from PIL import Image, ImageTk
-#import mysql.connector
+import mysql.connector
 from tkinter import ttk, messagebox
 import subprocess
 import customtkinter as ctk
 from tkcalendar import Calendar
 
-
-# TODO: add check box to turn on/off the tilt servo
 
 class App(ctk.CTk):
     def __init__(self, window, window_title, video_source=0):
@@ -48,13 +46,13 @@ class App(ctk.CTk):
         ctk.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
         # create database connection and cursor
-        #self.conn = mysql.connector.connect(
-        #            host="localhost",
-        #            user="root",
-        #            passwd="Radlich-1989",
-        #            database="CameraDB"
-        #            )
-        #self.c = self.conn.cursor()
+        self.conn = mysql.connector.connect(
+                    host="localhost",
+                    user="root",
+                    passwd="password",
+                    database="CameraDB"
+                    )
+        self.c = self.conn.cursor()
 
 
         # create treeview to display database
@@ -96,7 +94,6 @@ class App(ctk.CTk):
     def show_selection(self):
         selected_option = self.var.get()
         print("Selected option:", selected_option)
-        # TODO put a new column in DB for the desired resolution
         
     def open_camera_window(self):
         # create a new window with the camera feed
