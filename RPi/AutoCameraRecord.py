@@ -1,6 +1,6 @@
 import mysql.connector
 import datetime
-#import subprocess
+import subprocess
 import threading
 import time
 import queue
@@ -76,10 +76,17 @@ def getNextEntry():
                 
             continue
 
-        # Call the Camera Record method
-        #runCameraScript(duration)
+        # convert min to frames = time * 60s/min * 15fps
+        duration = int(rows[0][3]) * 60 * 15
 
-        # time.sleep(60)
+        # Turn off HDMI connection once recording has started to try and save power
+        try:
+            subprocess.call(["vcgencmd", "display_power", "0"])
+        except Exception as e:
+            print("Error turning off HDMI: {e}")
+        
+        # Call the Camera Record function
+        runCameraScript(duration)
 
         # Delte entry after sending to the Camera Record Script
         mycursor.execute('DELETE FROM CameraSchedule WHERE CameraSchedule.ID=%s', (rows[0][0],))
@@ -92,8 +99,6 @@ def getNextEntry():
     
 
 def runCameraScript(record_dur):
-    #subprocess.Popen(["python", "/home/pi/scripts/Async_camera_test.py"])
-
     # Create a VideoCapture object
     cap = cv2.VideoCapture(0)
 
@@ -120,13 +125,15 @@ def runCameraScript(record_dur):
     
     # Get the frames per second (fps) and the frame size
     fps = int(cap.get(cv2.CAP_PROP_FPS))
-
+    frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    
     date_time = datetime.datetime.now()
     date_time = date_time.strftime("%Y-%m-%d_%H-%M-%S")
 
     # Define the codec and create a VideoWriter object
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out = cv2.VideoWriter('/media/pi/New Volume/Output_{}.mp4'.format(date_time), fourcc, fps,
+    out = cv2.VideoWriter('/media/pi/RPi/Output_{}.mp4'.format(date_time), fourcc, fps,
                          (screen_width, screen_height))
 
     # Queue to store the frames
@@ -263,7 +270,7 @@ if '__main__' == __name__:
     db = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                passwd="Radlich-1989",
+                passwd="password",
                 database="CameraDB"
             )
 
