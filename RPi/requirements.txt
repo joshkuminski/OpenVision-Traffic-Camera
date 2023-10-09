@@ -1,4 +1,3 @@
 opencv-python
-#mariadb-server
 Pillow
 mysql-connector-python
