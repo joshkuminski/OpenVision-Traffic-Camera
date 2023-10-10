@@ -55,7 +55,7 @@ void setup() {
   }
   
   Serial.println("Servos Initiated, please wait...");
-  //wait 1min to plug in joystick and pi to power up. If joystick is not plugged in the servos may go crazy
+  //wait 1min to plug in joystick and pi to power up.
   delay(60000);
 
 }
