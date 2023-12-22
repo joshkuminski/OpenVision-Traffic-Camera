@@ -47,6 +47,11 @@ def getNextEntry():
     duration = int(rows[0][3]) * 60 * 15
 
     if int(time_difference.total_seconds()) > 0:
+        if int(time_difference.total_seconds()) > 900: # if greater than 15min -> shutdown pi
+            off_duration = duration - 600
+            shutDownPi(off_duration)
+        else:
+            continue
         timer = threading.Timer(int(time_difference.total_seconds()), runCameraScript, args=[duration])
         timer.start()
         start_time = time.time()
@@ -96,8 +101,8 @@ def getNextEntry():
         print("entry deleted")
         
     db.commit()
-    
 
+    
 def runCameraScript(record_dur):
     # Create a VideoCapture object
     cap = cv2.VideoCapture(0)
@@ -189,6 +194,13 @@ def runCameraScript(record_dur):
     cv2.destroyAllWindows()
 
 
+def shutDownPi(off_duration):
+    # After Recording is completed, grab the next entry from the database
+    # Send a messgae to the Pico to turn the relay off and cut power to the pi
+    # Include in the message the duration to remain off
+    # NOTE: the angle of the servos needs to be stored in the Pico so that it moves back to the correct location.
+    
+    
 def delOldDates():
     # execute a query to retrieve data from the database
     mycursor.execute('SELECT * FROM CameraSchedule')
