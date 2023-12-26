@@ -5,6 +5,7 @@ import threading
 import time
 import queue
 import cv2
+import serial
 
 
 def AddEntry():
@@ -48,7 +49,7 @@ def getNextEntry():
 
     if int(time_difference.total_seconds()) > 0:
         if int(time_difference.total_seconds()) > 900: # if greater than 15min -> shutdown pi
-            off_duration = duration - 600
+            off_duration = time_difference.total_seconds() - 300  # give it 5 min to boot up before recording
             shutDownPi(off_duration)
         else:
             continue
@@ -84,11 +85,11 @@ def getNextEntry():
         # convert min to frames = time * 60s/min * 15fps
         duration = int(rows[0][3]) * 60 * 15
 
-        # Turn off HDMI connection once recording has started to try and save power
-        try:
-            subprocess.call(["vcgencmd", "display_power", "0"])
-        except Exception as e:
-            print("Error turning off HDMI: {e}")
+        ## Turn off HDMI connection once recording has started to try and save power
+        #try:
+        #    subprocess.call(["vcgencmd", "display_power", "0"])
+        #except Exception as e:
+        #    print("Error turning off HDMI: {e}")
         
         # Call the Camera Record function
         runCameraScript(duration)
@@ -198,7 +199,11 @@ def shutDownPi(off_duration):
     # After Recording is completed, grab the next entry from the database
     # Send a messgae to the Pico to turn the relay off and cut power to the pi
     # Include in the message the duration to remain off
-    # NOTE: the angle of the servos needs to be stored in the Pico so that it moves back to the correct location.
+
+    #Establish serial connection
+    ser = serial.Serial('/dev/ttyS0', 115200, timeout=5)
+    ser.write('turnoff_{}'.format(off_duration).encode('utf-8'))
+    time.sleep(30)
     
     
 def delOldDates():
