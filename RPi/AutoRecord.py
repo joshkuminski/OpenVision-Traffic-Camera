@@ -202,8 +202,14 @@ def shutDownPi(off_duration):
 
     #Establish serial connection
     ser = serial.Serial('/dev/ttyS0', 115200, timeout=5)
+     
     ser.write('turnoff_{}'.format(off_duration).encode('utf-8'))
-    time.sleep(30)
+    #time.sleep(30)
+    # Wait for a response
+    response = ser.readline().decode().strip()
+    print("Received response:", response)    
+    
+    ser.close()
     
     
 def delOldDates():
