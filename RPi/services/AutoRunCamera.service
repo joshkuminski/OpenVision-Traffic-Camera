@@ -5,7 +5,7 @@ After=multi-user.target
 [Service]
 Type=simple
 ExecStartPre=/bin/sleep 300
-ExecStart=/usr/local/bin/python3.9 /home/pi/scripts/AutoCameraRecord.py
+ExecStart=/usr/local/bin/python3.9 /home/pi/scripts/AutoRecord.py
 Restart=on-failure
 
 [Install]
