@@ -1,3 +1,12 @@
 [Unit]
+Description=CameraAutoRecord
+After=multi-user.target
 
-{service]
+[Service]
+Type=simple
+ExecStartPre=/bin/sleep 300
+ExecStart=/usr/local/bin/python3.9 /home/pi/scripts/AutoCameraRecord.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
