@@ -1,1 +1,1 @@
-.dwsktop files go on the pi Desktop
+.desktop files go on the pi Desktop
