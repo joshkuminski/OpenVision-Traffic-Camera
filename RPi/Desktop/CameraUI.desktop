@@ -1,1 +1,4 @@
-hello
+[Desktop Entry]
+Type=Application
+Name=Camera_UI
+Exec=python3.9 /home/pi/scripts/GUI.py
