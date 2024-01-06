@@ -1,0 +1,12 @@
+[Unit]
+Description=Shutdown pi when not in use
+After=mulit-user.target
+
+[Service]
+Type=simple
+ExecStartPre=/bin/sleep 300
+ExecStart=/usr/local/bin/python3.9 /home/pi/scripts/AutoShutdown.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
