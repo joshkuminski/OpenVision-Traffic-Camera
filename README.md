@@ -5,7 +5,7 @@
 
 WORK IN PROGRESS
 
-OpenVision Traffic Camera is a module of the [OpenVision](https://github.com/joshkuminski/OpenVision) Framework for traffic monitoring for intersection turning movement counts using a raspberry pi 4 and HQ camera.
+OpenVision Traffic Camera is an integral component within the [OpenVision](https://github.com/joshkuminski/OpenVision) Framework for traffic monitoring. Specifically designed for conducting intersection turning movement counts, this module harnesses the power of a Raspberry Pi 4 paired with an HQ camera to provide comprehensive traffic insights.
 
 
 
