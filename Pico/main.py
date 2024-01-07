@@ -1,4 +1,4 @@
-from machine import UART, Pin, ADC, PWM, Timer
+from machine import UART, Pin, ADC, PWM
 import utime
 
 #JOYSTICK
