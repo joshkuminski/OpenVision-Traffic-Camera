@@ -10,7 +10,7 @@ CREATE USER 'OpenVisionUser'@'localhost' IDENTIFIED BY 'OpenVision';
 GRANT ALL PRIVLEGES ON CameraDB.* TO 'OpenVisionUser'@'localhost';
 FLUSH PRIVLIGES;
 
-# Install PHPMyAdmin
+# Install PHPMyAdmin (optional)
 sudo apt install phpmyadmin -> select apache2 web server
 sudo nano /etc/apache2/apache2.conf
   Include @ bottom: /etc/phpmyadmin/apache.conf
