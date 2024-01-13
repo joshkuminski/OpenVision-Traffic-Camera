@@ -8,6 +8,6 @@
 5. Joystick
 6. Raspberry Pi 7" Touchscreen
 7. Buck converter
-8. RTC module w/ CR1220 battery
+8. RTC module w/ CR1220 battery [Amazon](https://www.amazon.com/dp/B003CU3E2Q?psc=1&ref=ppx_yo2ov_dt_b_product_details)
 9. Cable Connections: 4-pin bulkhead, 2-pin large bulkhead, USB bulkhead, 2-port USB bulkhead, 
 X. Lots of 3D Printed Parts (see CAD Folder)
