@@ -26,9 +26,10 @@
 26. JB Weld 5min epoxy [Amazon](https://www.amazon.com/J-B-Weld-ClearWeld-Syringe-25mL/dp/B09C6R4VSQ?pd_rd_w=Xlw8k&content-id=amzn1.sym.80b2efcb-1985-4e3a-b8e5-050c8b58b7cf&pf_rd_p=80b2efcb-1985-4e3a-b8e5-050c8b58b7cf&pf_rd_r=1Z3FPSEE3GW389RA6FTH&pd_rd_wg=nEwTI&pd_rd_r=934e3346-821a-4ffd-a210-5c8206a14ca7&pd_rd_i=B09C6R4VSQ&ref_=pd_bap_d_grid_rp_0_73_t&th=1)
 27. 38' fiberglass mast [MGS](https://mgs4u.com/product/38-feet-heavy-duty-fiberglass-push-up-mast-mk-6-hd/)
 28. 1/4" Aluminum Plate
-29. 1" ALuminum tube
-30. 4" Aluminum tube
-31. 3D Printed Parts (see CAD Folder)
+29. 1/4" Aluminum Flat Bar (3/16" x 2" x 4') 
+30. 1" ALuminum tube
+31. 3" Aluminum tube
+33. 3D Printed Parts (see CAD Folder)
     - GF Nylon [Amazon](https://www.amazon.com/YXPOLYER-Reinforced-Filament-Engineering-Increased/dp/B09ZXL1J6V/ref=sr_1_7_sspa?crid=1TNR78GXYZ6JD&dib=eyJ2IjoiMSJ9.DHgw8s04lq-lacaU3fj5KbFb_vaH0LMHtbNmRhfgt8Urjv7w7MfwwNEoOghT-Et3PEwj7py0mSHSY-MMxxGmyoyCisk4BVCsOuFvjE-O0hYuwkQdVihU9AuUjGkF10XOoTMnUvZoD1usGoBZxppltQ.-cPvASSvBKHP3RhhQxVyrur9N2kkwy-YW4uqE8RJs3Q&dib_tag=se&keywords=GF+Nylon+filament&qid=1705164989&sprefix=gf+nylon+filament%2Caps%2C108&sr=8-7-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9tdGY&psc=1)
     - PLA [Amazon](https://www.amazon.com/ELEGOO-Filament-Stronger-Dimensional-Accuracy/dp/B0C14PVBPB/ref=sr_1_7_sspa?crid=RRFYFAD3AKMO&dib=eyJ2IjoiMSJ9.CARxe61aHddBMGRb2rQvndfXh9wmFkVlVk8A4D300MlCYfKAkkTOz8b7e8Ny-ejv-JWd5EPos5nJcpZgMSiYoLgGc8-IuLCguEoKEAjux9HezYqs3ZaxbtvXiRSAdZ4PFxMUpxLjbnLxvvnnoNc_9Q.WaUXQpD2-9T-rnT78B9xdOEeEnWQx8t37QjgKnE6on0&dib_tag=se&keywords=PLA&qid=1705165014&sprefix=pla%2Caps%2C147&sr=8-7-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9tdGY&th=1)
     - ASA [Amazon](https://www.amazon.com/dp/B0CD18NM4K?psc=1&ref=ppx_yo2ov_dt_b_product_details)
