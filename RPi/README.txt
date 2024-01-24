@@ -18,3 +18,16 @@ sudo service apache2 restart
 sudo ln -s /usr/share/phpmyadmin /var/www/html
 
 
+
+sudo apt install matchbox-keyboard
+
+#edit file /etc/X11/xorg.conf
+Section "InputClass"
+   Identifier "calibration"
+   Driver "evdev"
+   MatchProduct "FT5406 memory based driver"
+
+   Option "EmulateThirdButton" "1"
+   Option "EmulateThirdButtonTimeout" "750"
+   Option "EmulateThirdButtonMoveThreshold" "30"
+EndSection
