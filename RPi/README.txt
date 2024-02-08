@@ -1,6 +1,6 @@
 Place all python files in the directory: /home/pi/scripts
 
-# Install MySQL Database  
+*** Install MySQL Database *** 
 sudo apt update
 sudo apt upgrade
 sudo apt install mariadb-server
@@ -11,21 +11,26 @@ CREATE USER 'OpenVisionUser'@'localhost' IDENTIFIED BY 'OpenVision';
 GRANT ALL PRIVILEGES ON CameraDB.* TO 'OpenVisionUser'@'localhost';
 FLUSH PRIVILEGES;
 
-# Install PHPMyAdmin
+*** Install PHPMyAdmin *** 
 sudo apt install phpmyadmin -> select apache2 web server -> select 'yes' on the next prompt. This will run you through setting up a password for PHPmyAdmin itself
 sudo nano /etc/apache2/apache2.conf
   Include @ bottom: Include /etc/phpmyadmin/apache.conf
 sudo service apache2 restart
 sudo ln -s /usr/share/phpmyadmin /var/www/html
 
-# Now go to ip/phpmyadmin in a browser
+*** Now go to 'your pi ip'/phpmyadmin in a browser *** 
+*** Create a Table Named 'CameraSchedule' with 4 Columns: *** 
+ID - int - AutoIncrement
+Date - Date
+Time - text
+Duration - int
 
-# Additional Packages Needed
+*** Additional Packages Needed *** 
 sudo apt install matchbox-keyboard
 sudo apt install arduino
 sudo apt-get install python3-pil python3-pil.imagetk
 
-# Setup RTC module
+*** Setup RTC module *** 
 sudo nano /boot/config.txt
 add to the end of the file: dtoverlay=i2c-rtc,ds3231
 sudo apt -y remove fake-hwclock
