@@ -8,7 +8,7 @@ sudo mysql -u root -p
 CREATE DATABASE CameraDB;
 CREATE USER 'OpenVisionUser'@'localhost' IDENTIFIED BY 'OpenVision';
 GRANT ALL PRIVILEGES ON CameraDB.* TO 'OpenVisionUser'@'localhost';
-FLUSH PRIVLIGES;
+FLUSH PRIVILEGES;
 
 # Install PHPMyAdmin (optional)
 sudo apt install phpmyadmin -> select apache2 web server
