@@ -21,6 +21,7 @@ sudo ln -s /usr/share/phpmyadmin /var/www/html
 # Now go to ip/phpmyadmin in a browser
 
 sudo apt install matchbox-keyboard
+sudo apt install arduino
 
 #edit file /etc/X11/xorg.conf
 Section "InputClass"
