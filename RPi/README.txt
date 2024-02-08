@@ -4,13 +4,14 @@ Place all python files in the directory: /home/pi/scripts
 sudo apt update
 sudo apt upgrade
 sudo apt install mariadb-server
+sudo mysql_secure_installation
 sudo mysql -u root -p
 CREATE DATABASE CameraDB;
 CREATE USER 'OpenVisionUser'@'localhost' IDENTIFIED BY 'OpenVision';
 GRANT ALL PRIVILEGES ON CameraDB.* TO 'OpenVisionUser'@'localhost';
 FLUSH PRIVILEGES;
 
-# Install PHPMyAdmin (optional)
+# Install PHPMyAdmin
 sudo apt install phpmyadmin -> select apache2 web server
 sudo nano /etc/apache2/apache2.conf
   Include @ bottom: Include /etc/phpmyadmin/apache.conf
