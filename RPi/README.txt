@@ -7,7 +7,7 @@ sudo apt install mariadb-server
 sudo mysql -u root -p
 CREATE DATABASE CameraDB;
 CREATE USER 'OpenVisionUser'@'localhost' IDENTIFIED BY 'OpenVision';
-GRANT ALL PRIVLEGES ON CameraDB.* TO 'OpenVisionUser'@'localhost';
+GRANT ALL PRIVILEGES ON CameraDB.* TO 'OpenVisionUser'@'localhost';
 FLUSH PRIVLIGES;
 
 # Install PHPMyAdmin (optional)
