@@ -13,9 +13,8 @@ FLUSH PRIVILEGES;
 # Install PHPMyAdmin (optional)
 sudo apt install phpmyadmin -> select apache2 web server
 sudo nano /etc/apache2/apache2.conf
-  Include @ bottom: /etc/phpmyadmin/apache.conf
+  Include @ bottom: Include /etc/phpmyadmin/apache.conf
 sudo service apache2 restart
-sudo ln -s /usr/share/phpmyadmin /var/www/html
 
 
 
