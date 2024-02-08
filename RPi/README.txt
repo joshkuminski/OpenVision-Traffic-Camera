@@ -20,9 +20,20 @@ sudo ln -s /usr/share/phpmyadmin /var/www/html
 
 # Now go to ip/phpmyadmin in a browser
 
+# Additional Packages Needed
 sudo apt install matchbox-keyboard
 sudo apt install arduino
 sudo apt-get install python3-pil python3-pil.imagetk
+
+# Setup RTC module
+sudo nano /boot/config.txt
+add to the end of the file: dtoverlay=i2c-rtc,ds3231
+sudo apt -y remove fake-hwclock
+sudo update-rc.d -f fake-hwclock remove
+sudo nano /lib/udev/hwclock-set -> comment out the following lines:
+  #if [ -e /run/systemd/system ] ; then
+  #    exit 0
+  #fi
 
 #edit file /etc/X11/xorg.conf
 Section "InputClass"
