@@ -22,6 +22,7 @@ sudo ln -s /usr/share/phpmyadmin /var/www/html
 
 sudo apt install matchbox-keyboard
 sudo apt install arduino
+sudo apt-get install python3-pil python3-pil.imagetk
 
 #edit file /etc/X11/xorg.conf
 Section "InputClass"
