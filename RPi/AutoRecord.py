@@ -81,10 +81,6 @@ def getNextEntry():
         #duration = int(rows[0][3]) * 60 * 15
         duration = int(rows[0][3]) * 60 # convert to min with ffmpeg
         
-        #try:
-        #    subprocess.call(["vcgencmd", "display_power", "0"])
-        #except Exception as e:
-        #    print("Error turning of HDMI: {e}")
         date_time = datetime.datetime.now()
         date_time = date_time.strftime("%Y-%m-%d_%H-%M-%S")
         
@@ -98,15 +94,12 @@ def getNextEntry():
         # Call the Camera Record method
         #opencv_record_video(duration)
         ffmpeg_record_video(out, duration)
-        
-        # time.sleep(60)
 
         # Delte entry after sending to the Camera Record Script
         mycursor.execute('DELETE FROM CameraSchedule WHERE CameraSchedule.ID=%s', (rows[0][0],))
         
     else:
         mycursor.execute('DELETE FROM CameraSchedule WHERE CameraSchedule.ID=%s', (rows[0][0],))
-        #print("entry deleted")
         
     db.commit()
     
@@ -119,14 +112,8 @@ def check_usb_devices():
         
         # Check if the command was successful (return code 0)
         if result.returncode == 0:
-            # Print the lsusb output
-            #print("USB devices:")
-            #print(result.stdout)
             if "microSD" in result.stdout:
-                #print('true')
                 return True
-            #else:
-                #print('false')
         else:
             print(f"Error: {result.stderr}")
     except Exception as e:
@@ -155,35 +142,28 @@ def ffmpeg_record_video(output_file, duration=60):
     
     
 def opencv_record_video(record_dur):
-    #subprocess.Popen(["python", "/home/pi/scripts/Async_camera_test.py"])
-
     # Create a VideoCapture object
     cap = cv2.VideoCapture(0)
 
     count = 0
     # Check if capture was successful - try for five times
     while not cap.isOpened() and count < 5:
-        #print("Unable to open video stream. Trying again in 5 seconds...")
         time.sleep(5)
         cap = cv2.VideoCapture(0)
         count += 1
 
     if count == 5:
-        #print("Unable to open video stream. Check your connection.")
+        print("Unable to open video stream. Check your connection.")
         exit()
 
     # Set the video inpout
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-    #cap.set(4, 720)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
     cap.set(cv2.CAP_PROP_FPS, 15)  # set to 15 FPS
     
     # HD
     screen_width = 1280 # width
     screen_height = 720  # height
-    # 720P
-    #screen_width = 720 # width
-    #screen_height = 480  # height
     
     # Get the frames per second (fps) and the frame size
     fps = int(cap.get(cv2.CAP_PROP_FPS))
@@ -300,7 +280,6 @@ def checkDuplicateEntries():
     unique_rows = set()
     for i in range(len(rows)):
         new_rows.append(rows[i][1:])
-    #print(new_rows)
     # create a list to keep track of duplicate rows
     duplicate_rows = []
     
@@ -322,15 +301,9 @@ def checkDuplicateEntries():
 
     # check if there are any duplicates
     if len(duplicate_rows) > 0:
-        # ask the user if they want to delete the duplicates
-        #response = input(f"There are {len(duplicate_rows)} duplicate rows. Do you want to delete them? (y/n) ")
-        #if response.lower() == 'y':
-            # delete the duplicate rows from the table
+        # delete the duplicate rows from the table
         for row in duplicate_rows:
              mycursor.execute('DELETE FROM CameraSchedule WHERE id=%s', (row[0],))
-        #print("Duplicate rows deleted.")
-    #else:
-    #    print("Duplicate rows not deleted.")
     else:
         print("No duplicate rows found.")
 
