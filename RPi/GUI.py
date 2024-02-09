@@ -22,11 +22,11 @@ class App(ctk.CTk):
         
         # Create a variable to store the selected option
         self.var = tk.StringVar()
-        self.var.set("Option 1")
+        self.var.set("1")
         # Create the radio buttons
-        radio_button1 = tk.Radiobutton(window, text="SD", variable=self.var, value="Option 1")
-        radio_button2 = tk.Radiobutton(window, text="HD", variable=self.var, value="Option 2")
-        radio_button3 = tk.Radiobutton(window, text="Full HD", variable=self.var, value="Option 3")
+        radio_button1 = tk.Radiobutton(window, text="HD", variable=self.var, value="1")
+        radio_button2 = tk.Radiobutton(window, text="FHD", variable=self.var, value="2")
+        radio_button3 = tk.Radiobutton(window, text="QHD", variable=self.var, value="3")
 
         # Configure the command to be executed when a radio button is selected
         radio_button1.config(command=self.show_selection)
