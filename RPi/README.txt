@@ -1,3 +1,5 @@
+**Running 64bit Debian Bullseye**
+
 Place all python files in the directory: /home/pi/scripts
 
 *** Install MySQL Database *** 
