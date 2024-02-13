@@ -43,7 +43,8 @@ sudo nano /lib/udev/hwclock-set -> comment out the following lines:
   #    exit 0
   #fi
 
-#edit file /etc/X11/xorg.conf
+# Enable Right-click emulation
+# edit file /etc/X11/xorg.conf
 Section "InputClass"
    Identifier "calibration"
    Driver "evdev"
