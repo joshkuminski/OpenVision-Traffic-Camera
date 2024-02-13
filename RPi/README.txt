@@ -31,6 +31,7 @@ Duration - int
 sudo apt install matchbox-keyboard
 sudo apt install arduino
 sudo apt-get install python3-pil python3-pil.imagetk
+sudo apt install xinput-calibrator  # Then run, sudo xinput_calibrator, to calibrate the touchscreen
 
 *** Setup RTC module *** 
 sudo nano /boot/config.txt
