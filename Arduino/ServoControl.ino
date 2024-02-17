@@ -61,10 +61,6 @@ void setup() {
     X_readings[i] = 1; // Initialize the readings array
     Y_readings[i] = 1; 
   }
-  
-  //Serial.println("Servos Initiated, please wait...");
-  //wait 1min to plug in joystick and pi to power up. If joystick is not plugged in the servos may go crazy
-  //delay(60000);
 
 }
 
@@ -81,20 +77,16 @@ void loop() {
   {
     digitalWrite(RELAY_PIN, LOW);
   }
-  
-    //Activate Servo if LDR value is greater than 250.
+
     xValue = analogRead(joyX);    
     yValue = analogRead(joyY);
-    //Serial.print(xValue);
-    //Serial.print(" ");
-    //Serial.println(yValue);
     
     //Need 10 readings to all equal XX before proceeding
     X_readings[xIndex] = xValue;
     Y_readings[yIndex] = yValue;
     
     if (allZero = true){
-      //no nothing
+      //do nothing
     }
     else{
       for (int i = 1; i < numReadings; i++) {
@@ -160,7 +152,7 @@ void recvWithStartEndMarkers()                                        // Functio
 
   while (Serial.available() > 0 && newData == false){
     rc = Serial.read();
-    //Serial.println(rc);
+    
     if (recvInProgress == true)
     {
       if (rc != endMarker)
@@ -206,7 +198,7 @@ void processSerialData()
           char buff[18];
           
           strtokIndx = strtok(receivedChars, ":");                   // Skip the first segment which is the 'R'
-          strtokIndx = strtok(NULL, ":");                            // Get the board number
+          strtokIndx = strtok(NULL, ":");                            
           boardNumber = atol(strtokIndx);
           long Relay_delay = boardNumber * 60; // Time in s
           Serial.println(Relay_delay);
@@ -215,7 +207,7 @@ void processSerialData()
           // Set the RelayTimer millis so that the relay turns back on after X seconds
           RelayMillis = currentMillis;
           RelayTimer = Relay_delay * 1000; //Time in ms
-          digitalWrite(RELAY_PIN, HIGH);
+          digitalWrite(RELAY_PIN, HIGH); // Turn off the Pi
           break;
         }
     }
@@ -228,8 +220,6 @@ void saveToEEPROM(int Pos1, int Pos2){
   // Write the default position (zero) to EEPROM
     EEPROM.write(SERVO_POSITION_ADDRESS_X, Pos1);
     EEPROM.write(SERVO_POSITION_ADDRESS_Y, Pos2);
-    //Serial.print(Pos1);
-    //Serial.println(Pos2);
     EEPROMMillis = millis();
     writeToEEPROM = writeToEEPROM * 2;
 }
