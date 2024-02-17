@@ -1,4 +1,5 @@
 [Desktop Entry]
 Type=Application
 Name=Camera_UI
-Exec=python3 /home/OpenVision/scripts/CameraGUI.py
+Exec=python /home/OpenVision/scripts/CameraGUI.py
+Categories=OpenVision;
