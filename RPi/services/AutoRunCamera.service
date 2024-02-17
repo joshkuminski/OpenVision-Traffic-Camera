@@ -4,10 +4,9 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStartPre=/bin/sleep 300
-ExecStart=/usr/bin/python3.9 /home/pi/scripts/AutoRecord.py
+ExecStart=/usr/bin/python3.9 /home/pi(OpenVision)/scripts/AutoRecord.py
 Restart=on-failure
-Environment="PYTHONPATH=/home/pi/.local/lib/python3.9/site-packages"
+Environment="PYTHONPATH=/home/pi(OpenVision)/.local/lib/python3.9/site-packages"
 
 [Install]
 WantedBy=multi-user.target
