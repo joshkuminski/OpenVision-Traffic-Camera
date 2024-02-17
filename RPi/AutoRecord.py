@@ -6,6 +6,7 @@ import time
 import queue
 import cv2
 import os
+import serial
 
 
 #TODO - add log file 
@@ -47,57 +48,62 @@ def getNextEntry():
     time_difference = earliest_date_time - current_date_time
     
     if int(time_difference.total_seconds()) > 0:
-        timer = threading.Timer(int(time_difference.total_seconds()),lambda: None)
-        timer.start()
-        start_time = time.time()
-        #print("timer started for " + str(time_difference) + " min.")
-        
-        # This will stay in a loop until timer expires
-        while timer.is_alive():
-            elapsed_time = time.time() - start_time
-            # check DB every 15min = 900 sec
-            if elapsed_time > 900:
-                
-                # reload the database
-                mycursor.execute("FLUSH TABLES;")
-                mycursor.execute("FLUSH PRIVILEGES;")
-                mycursor.execute("SET GLOBAL general_log = 'OFF';")
-                mycursor.execute("SET GLOBAL general_log = 'ON';")
-                
-                mycursor.execute("SELECT * FROM CameraSchedule ORDER BY Date, Time")
-                rows = mycursor.fetchall()
-                
-                if rows[0] != current_record:
-                    #print("new receord found")
-                    return
-                
-                start_time = time.time()
-                #print("No new record found")
-            time.sleep(1)
+        if int(time_difference.total_seconds()) > 900: # if greater than 15min -> shutdown pi     
+            off_duration = int(time_difference.total_seconds() - 300)  # give it 5 min to boot up before recording
+            print(off_duration)
+            shutDownPi(off_duration)
+        else: # start timer
+            timer = threading.Timer(int(time_difference.total_seconds()),lambda: None)
+            timer.start()
+            start_time = time.time()
+            #print("timer started for " + str(time_difference) + " min.")
             
-            continue
-
-        # convert min to frames = time * 60 s/min * 15fps
-        #duration = int(rows[0][3]) * 60 * 15
-        duration = int(rows[0][3]) * 60 # convert to min with ffmpeg
-        
-        date_time = datetime.datetime.now()
-        date_time = date_time.strftime("%Y-%m-%d_%H-%M-%S")
-        
-        usb_ls = check_usb_devices()
+            # This will stay in a loop until timer expires
+            while timer.is_alive():
+                elapsed_time = time.time() - start_time
+                # check DB every 15min = 900 sec
+                if elapsed_time > 900:
+                    
+                    # reload the database
+                    mycursor.execute("FLUSH TABLES;")
+                    mycursor.execute("FLUSH PRIVILEGES;")
+                    mycursor.execute("SET GLOBAL general_log = 'OFF';")
+                    mycursor.execute("SET GLOBAL general_log = 'ON';")
+                    
+                    mycursor.execute("SELECT * FROM CameraSchedule ORDER BY Date, Time")
+                    rows = mycursor.fetchall()
+                    
+                    if rows[0] != current_record:
+                        #print("new receord found")
+                        return
+                    
+                    start_time = time.time()
+                    #print("No new record found")
+                time.sleep(1)
+                
+                continue
     
-        if usb_ls:
-            out = '/media/pi/RPi/Output_{}.mp4'.format(date_time)
-        else:
-            out = '/home/pi/Videos/Output_{}.mp4'.format(date_time)
-
-        # Call the Camera Record method
-        #opencv_record_video(duration)  # OpenCV way
-        ffmpeg_record_video(out, duration)  # ffmpeg way
-
-        # Delte entry after sending to the Camera Record Script
-        mycursor.execute('DELETE FROM CameraSchedule WHERE CameraSchedule.ID=%s', (rows[0][0],))
+            # convert min to frames = time * 60 s/min * 15fps
+            #duration = int(rows[0][3]) * 60 * 15
+            duration = int(rows[0][3]) * 60 # convert to min with ffmpeg
+            
+            date_time = datetime.datetime.now()
+            date_time = date_time.strftime("%Y-%m-%d_%H-%M-%S")
+            
+            usb_ls = check_usb_devices()
         
+            if usb_ls:
+                out = '/media/pi/RPi/Output_{}.mp4'.format(date_time)
+            else:
+                out = '/home/pi/Videos/Output_{}.mp4'.format(date_time)
+    
+            # Call the Camera Record method
+            #opencv_record_video(duration)  # OpenCV way
+            ffmpeg_record_video(out, duration)  # ffmpeg way
+    
+            # Delte entry after sending to the Camera Record Script
+            mycursor.execute('DELETE FROM CameraSchedule WHERE CameraSchedule.ID=%s', (rows[0][0],))
+            
     else:
         mycursor.execute('DELETE FROM CameraSchedule WHERE CameraSchedule.ID=%s', (rows[0][0],))
         
@@ -317,7 +323,26 @@ def checkDuplicateEntries():
 
     # commit the changes and close the connection
     db.commit()
-    
+
+
+def shutDownPi(off_duration):
+    #Establish serial connection
+    ser = serial.Serial('/dev/ttyACM0', 115200, timeout=5)
+    while True:
+        off_dur_min = off_duration / 60  # send in minutes so the number isnt so large
+        ser.write('<R:{}>'.format(off_dur_min).encode('utf-8'))
+        
+        # Wait for a response
+        response = ser.readline().decode().strip()
+        print("Received response:", response)
+        
+        time.sleep(1)
+        if response == "End Transmission":
+            break
+        
+    ser.close()
+    return False
+
 
 if '__main__' == __name__:
     record = True  # set to false to add to DB
