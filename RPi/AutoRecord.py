@@ -92,8 +92,8 @@ def getNextEntry():
             out = '/home/pi/Videos/Output_{}.mp4'.format(date_time)
 
         # Call the Camera Record method
-        #opencv_record_video(duration)
-        ffmpeg_record_video(out, duration)
+        #opencv_record_video(duration)  # OpenCV way
+        ffmpeg_record_video(out, duration)  # ffmpeg way
 
         # Delte entry after sending to the Camera Record Script
         mycursor.execute('DELETE FROM CameraSchedule WHERE CameraSchedule.ID=%s', (rows[0][0],))
@@ -113,9 +113,14 @@ def check_usb_devices():
         # Check if the command was successful (return code 0)
         if result.returncode == 0:
             if "microSD" in result.stdout:
-                return True
+                if usb_ls:
+                    out = cv2.VideoWriter('/media/pi/RPi/Output_{}.mp4'.format(date_time), fourcc, fps,
+                            (screen_width, screen_height)          
         else:
-            print(f"Error: {result.stderr}")
+            out = cv2.VideoWriter('/home/pi/Videos/Output_{}.mp4'.format(date_time), fourcc, fps,
+                (screen_width, screen_height))
+            #print(f"Error: {result.stderr}")
+        return out
     except Exception as e:
         print(f"An error occurred: {e}")
 
@@ -186,12 +191,7 @@ def opencv_record_video(record_dur):
     # Call the function to check USB devices
     usb_ls = check_usb_devices()
     
-    if usb_ls:
-        out = cv2.VideoWriter('/media/pi/RPi/Output_{}.mp4'.format(date_time), fourcc, fps,
-                         (screen_width, screen_height))
-    else:
-        out = cv2.VideoWriter('/home/pi/Videos/Output_{}.mp4'.format(date_time), fourcc, fps,
-                         (screen_width, screen_height))
+
 
     # Queue to store the frames
     frame_queue = queue.Queue()
