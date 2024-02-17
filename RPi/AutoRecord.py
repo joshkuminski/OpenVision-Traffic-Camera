@@ -125,21 +125,29 @@ def ffmpeg_record_video(output_file, duration=60):
     # Define FFmpeg command to record video
     ffmpeg_command = [
         'ffmpeg',
+        '-loglevel', 'quiet',    # Set the loglevel to 'quiet' (off)
         '-f', 'v4l2',            # Input format (video4linux2 for Raspberry Pi camera)
         '-framerate', '20',      # Frame rate
         '-video_size', '2560x1440',  # Video resolution
         '-i', '/dev/video0',    # Input device (change as needed)
         '-t', str(duration),    # Duration of recording in seconds
-        '-vf', 'scale=1280:720',
+        '-vf', 'scale=1280:720', # Scale the recorded image
         '-c:v', 'libx264',      # Video codec
         '-preset', 'ultrafast', # Preset for speed
         '-pix_fmt', 'yuv420p',  # Pixel format
         output_file             # Output file path
     ]
 
-    # Run FFmpeg command
-    subprocess.run(ffmpeg_command)
-    
+    try:
+        put_screen_to_sleep()
+        subprocess.run(ffmpeg_command)
+    except subprocess.CalledProcessError as e:
+        print(e)
+
+
+def put_screen_to_slepp():
+    subprocess.run(["vcgencmd", "display_power", "0"])
+
     
 def opencv_record_video(record_dur):
     # Create a VideoCapture object
