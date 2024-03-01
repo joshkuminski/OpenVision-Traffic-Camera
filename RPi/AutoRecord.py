@@ -9,7 +9,6 @@ import os
 import serial
 
 
-#TODO - add log file 
 def AddEntry():
     Date='2023-05-05'
     Time='0839'
@@ -50,10 +49,15 @@ def getNextEntry():
     if int(time_difference.total_seconds()) > 0:
         if int(time_difference.total_seconds()) > 900: # if greater than 15min -> shutdown pi     
             off_duration = int(time_difference.total_seconds() - 300)  # give it 5 min to boot up before recording
-            print(off_duration)
-            shutDownPi(off_duration)
-        else: # start timer
-            timer = threading.Timer(int(time_difference.total_seconds()),lambda: None)
+            #print(off_duration)
+            if R_count == 0:
+                time.sleep(900)
+                off_duration = off_duration - 900
+                shutDownPi(off_duration)
+            else:
+                shutDownPi(off_duration)
+        else:
+            timer = threading.Timer(int(time_difference.total_seconds()), lambda: None)
             timer.start()
             start_time = time.time()
             #print("timer started for " + str(time_difference) + " min.")
@@ -79,28 +83,28 @@ def getNextEntry():
                     
                     start_time = time.time()
                     #print("No new record found")
-                time.sleep(1)
-                
+                    
                 continue
-    
+
             # convert min to frames = time * 60 s/min * 15fps
             #duration = int(rows[0][3]) * 60 * 15
-            duration = int(rows[0][3]) * 60 # convert to min with ffmpeg
+            duration = int(rows[0][3]) * 60
             
             date_time = datetime.datetime.now()
             date_time = date_time.strftime("%Y-%m-%d_%H-%M-%S")
             
             usb_ls = check_usb_devices()
-        
-            if usb_ls:
-                out = '/media/pi/RPi/Output_{}.mp4'.format(date_time)
+            
+            mount_location = '/media/OpenVision/RPi'
+            if usb_ls and os.path.exists(mount_location):
+                out = '/media/OpenVision/RPi/Output_{}.mp4'.format(date_time)
             else:
-                out = '/home/pi/Videos/Output_{}.mp4'.format(date_time)
-    
+                out = '/home/OpenVision/Videos/Output_{}.mp4'.format(date_time)
+
             # Call the Camera Record method
-            #opencv_record_video(duration)  # OpenCV way
-            ffmpeg_record_video(out, duration)  # ffmpeg way
-    
+            #opencv_record_video(duration)
+            ffmpeg_record_video(out, duration)
+            
             # Delte entry after sending to the Camera Record Script
             mycursor.execute('DELETE FROM CameraSchedule WHERE CameraSchedule.ID=%s', (rows[0][0],))
             
@@ -110,7 +114,6 @@ def getNextEntry():
     db.commit()
     
 
-
 def check_usb_devices():
     try:
         # Run the lsusb command and capture its output
@@ -119,46 +122,42 @@ def check_usb_devices():
         # Check if the command was successful (return code 0)
         if result.returncode == 0:
             if "microSD" in result.stdout:
-                if usb_ls:
-                    out = cv2.VideoWriter('/media/pi/RPi/Output_{}.mp4'.format(date_time), fourcc, fps,
-                            (screen_width, screen_height)          
+                return True
         else:
-            out = cv2.VideoWriter('/home/pi/Videos/Output_{}.mp4'.format(date_time), fourcc, fps,
-                (screen_width, screen_height))
-            #print(f"Error: {result.stderr}")
-        return out
+            print(f"Error: {result.stderr}")
     except Exception as e:
         print(f"An error occurred: {e}")
 
+
+def put_screen_to_sleep():
+    subprocess.run(["vcgencmd", "display_power", "0"])
 
 
 def ffmpeg_record_video(output_file, duration=60):
     # Define FFmpeg command to record video
     ffmpeg_command = [
         'ffmpeg',
-        '-loglevel', 'quiet',    # Set the loglevel to 'quiet' (off)
+        '-loglevel', 'quiet',     # set the logging to quiet (off)
         '-f', 'v4l2',            # Input format (video4linux2 for Raspberry Pi camera)
-        '-framerate', '20',      # Frame rate
+        '-framerate', '15',      # Frame rate
         '-video_size', '2560x1440',  # Video resolution
         '-i', '/dev/video0',    # Input device (change as needed)
         '-t', str(duration),    # Duration of recording in seconds
-        '-vf', 'scale=1280:720', # Scale the recorded image
+        '-vf', 'scale=1280:720',# Scale to 720p for Post Processing
         '-c:v', 'libx264',      # Video codec
         '-preset', 'ultrafast', # Preset for speed
         '-pix_fmt', 'yuv420p',  # Pixel format
         output_file             # Output file path
     ]
-
     try:
         put_screen_to_sleep()
-        subprocess.run(ffmpeg_command)
+        # Run FFmpeg command
+        #subprocess.run(ffmpeg_command)
+        ffmpeg_process = subprocess.Popen(ffmpeg_command)
+        ffmpeg_process.wait()
     except subprocess.CalledProcessError as e:
         print(e)
-
-
-def put_screen_to_slepp():
-    subprocess.run(["vcgencmd", "display_power", "0"])
-
+    
     
 def opencv_record_video(record_dur):
     # Create a VideoCapture object
@@ -167,6 +166,7 @@ def opencv_record_video(record_dur):
     count = 0
     # Check if capture was successful - try for five times
     while not cap.isOpened() and count < 5:
+        #print("Unable to open video stream. Trying again in 5 seconds...")
         time.sleep(5)
         cap = cv2.VideoCapture(0)
         count += 1
@@ -177,12 +177,16 @@ def opencv_record_video(record_dur):
 
     # Set the video inpout
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+    #cap.set(4, 720)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
     cap.set(cv2.CAP_PROP_FPS, 15)  # set to 15 FPS
     
     # HD
     screen_width = 1280 # width
     screen_height = 720  # height
+    # 720P
+    #screen_width = 720 # width
+    #screen_height = 480  # height
     
     # Get the frames per second (fps) and the frame size
     fps = int(cap.get(cv2.CAP_PROP_FPS))
@@ -197,7 +201,12 @@ def opencv_record_video(record_dur):
     # Call the function to check USB devices
     usb_ls = check_usb_devices()
     
-
+    if usb_ls:
+        out = cv2.VideoWriter('/media/OpenVision/RPi/Output_{}.mp4'.format(date_time), fourcc, fps,
+                         (screen_width, screen_height))
+    else:
+        out = cv2.VideoWriter('/home/OpenVision/Videos/Output_{}.mp4'.format(date_time), fourcc, fps,
+                         (screen_width, screen_height))
 
     # Queue to store the frames
     frame_queue = queue.Queue()
@@ -232,12 +241,6 @@ def opencv_record_video(record_dur):
             
         if not ret:
             break
-
-        # Display the frame
-        #if frame_num == 0 or frame_num % 5 == 0:
-        #    pass
-            # new_frame = cv2.resize(frame, (640, 480))
-            # cv2.imshow('frame', new_frame)
 
         # Break the loop if the 'q' key is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -282,7 +285,6 @@ def delOldDates():
     # commit the changes to the database
     db.commit()
 
-    # close the database connection
     
 def checkDuplicateEntries():
     new_rows = []
@@ -294,6 +296,7 @@ def checkDuplicateEntries():
     unique_rows = set()
     for i in range(len(rows)):
         new_rows.append(rows[i][1:])
+
     # create a list to keep track of duplicate rows
     duplicate_rows = []
     
@@ -315,7 +318,6 @@ def checkDuplicateEntries():
 
     # check if there are any duplicates
     if len(duplicate_rows) > 0:
-        # delete the duplicate rows from the table
         for row in duplicate_rows:
              mycursor.execute('DELETE FROM CameraSchedule WHERE id=%s', (row[0],))
     else:
@@ -346,12 +348,12 @@ def shutDownPi(off_duration):
 
 if '__main__' == __name__:
     record = True  # set to false to add to DB
-    
+    R_count = 0
     db = mysql.connector.connect(
                 host="localhost",
                 user="OpenVisionUser",
                 passwd="OpenVision",
-                database="RPiCamera"
+                database="CameraDB"
             )
 
     mycursor = db.cursor()
@@ -363,8 +365,10 @@ if '__main__' == __name__:
             checkDuplicateEntries()
         
             # this will get the next time to record, start a timer and execute the record script
+            subprocess.run(["vcgencmd", "display_power", "1"])
             getNextEntry()
-             
+            R_count += 1
+
     else:
         
         AddEntry()
