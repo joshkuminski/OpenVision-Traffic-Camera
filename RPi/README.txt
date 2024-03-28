@@ -10,7 +10,7 @@ sudo mysql_secure_installation
 sudo mysql -u root -p
 CREATE DATABASE RPiCamera_db;
 CREATE USER 'OpenVisionUser'@'localhost' IDENTIFIED BY 'OpenVision';
-GRANT ALL PRIVILEGES ON CameraDB.* TO 'OpenVisionUser'@'localhost';
+GRANT ALL PRIVILEGES ON RPiCamera_db.* TO 'OpenVisionUser'@'localhost';
 FLUSH PRIVILEGES;
 
 *** Install PHPMyAdmin *** 
