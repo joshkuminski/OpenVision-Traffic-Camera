@@ -6,6 +6,7 @@ Place all python files in the directory: /home/pi/scripts
 sudo apt update
 sudo apt upgrade
 sudo apt install mariadb-server
+sudo apt install php
 sudo mysql_secure_installation
 sudo mysql -u root -p
 CREATE DATABASE RPiCamera_db;
