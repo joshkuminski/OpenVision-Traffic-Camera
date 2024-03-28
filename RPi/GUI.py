@@ -149,12 +149,12 @@ class App(ctk.CTk):
         for i in self.treeview.get_children():
             self.treeview.delete(i)
         
-        #self.c.execute("SELECT * FROM CameraSchedule")
-        #rows = self.c.fetchall()
+        self.c.execute("SELECT * FROM CameraSchedule")
+        rows = self.c.fetchall()
         
         # query database and add entries to treeview
-        #for row in rows:
-        #    self.treeview.insert('', 'end', text=row[0], values=(row[1], row[2], row[3]))
+        for row in rows:
+            self.treeview.insert('', 'end', text=row[0], values=(row[1], row[2], row[3]))
 
     def add_entry(self,date, time, duration):
         # insert new entry into database
