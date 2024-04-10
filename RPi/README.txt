@@ -44,6 +44,10 @@ sudo nano /lib/udev/hwclock-set -> comment out the following lines:
   #    exit 0
   #fi
 
+*** Turn Off Backlight ***
+sudo chmod 777 /sys/class/backlight/10-0045/bl_power
+echo 1 > /sys/class/backlight/10-0045/bl_power
+
 # Enable Right-click emulation
 # edit file /etc/X11/xorg.conf
 Section "InputClass"
