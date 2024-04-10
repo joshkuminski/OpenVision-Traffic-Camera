@@ -140,8 +140,9 @@ def check_usb_devices():
 
 
 def put_screen_to_sleep():
-    subprocess.run(["vcgencmd", "display_power", "0"])
-
+    #subprocess.run(["vcgencmd", "display_power", "0"])
+    subprocess.run("echo 1 >/sys/class/backlight/10-0045/bl_power", shell=True)
+    
 
 def ffmpeg_record_video(output_file, duration=60):
     # Define FFmpeg command to record video
@@ -375,7 +376,8 @@ if '__main__' == __name__:
             checkDuplicateEntries()
         
             # this will get the next time to record, start a timer and execute the record script
-            subprocess.run(["vcgencmd", "display_power", "1"])
+            #subprocess.run(["vcgencmd", "display_power", "1"])
+            subprocess.run("echo 0 >/sys/class/backlight/10-0045/bl_power", shell=True)
             getNextEntry()
             R_count += 1
 
