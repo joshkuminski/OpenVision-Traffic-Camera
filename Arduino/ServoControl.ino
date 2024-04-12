@@ -10,6 +10,7 @@
 
 #define joyX A1 //Tilt
 #define joyY A0 //Pan
+#define ReadVolt A2
 #define SERVO_POSITION_ADDRESS_X 0
 #define SERVO_POSITION_ADDRESS_Y 1
 
@@ -92,12 +93,15 @@ void loop() {
     digitalWrite(RELAY_PIN, LOW);
   }
   
+  if (currentMillis - VoltageMillis >= VoltageTimer)
+  {
+    //Check Voltage
+    
+  }
+  
     //Activate Servo if LDR value is greater than 250.
     xValue = analogRead(joyX);    
     yValue = analogRead(joyY);
-    //Serial.print(xValue);
-    //Serial.print(" ");
-    //Serial.println(yValue);
     
     //Need 10 readings to all equal XX before proceeding
     X_readings[xIndex] = xValue;
@@ -240,8 +244,6 @@ void saveToEEPROM(int Pos1, int Pos2){
   // Write the default position (zero) to EEPROM
     EEPROM.write(SERVO_POSITION_ADDRESS_X, Pos1);
     EEPROM.write(SERVO_POSITION_ADDRESS_Y, Pos2);
-    //Serial.print(Pos1);
-    //Serial.println(Pos2);
     EEPROMMillis = millis();
-    writeToEEPROM = writeToEEPROM * 2;
+    writeToEEPROM = writeToEEPROM * 2;  //Increase the time we write to EEPROM
 }
