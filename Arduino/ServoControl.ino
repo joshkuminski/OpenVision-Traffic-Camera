@@ -14,7 +14,7 @@
 #define SERVO_POSITION_ADDRESS_X 0
 #define SERVO_POSITION_ADDRESS_Y 1
 
-#include <Servo.h>
+#include <Servo.h> //Needs to be added via library manager
 #include <EEPROM.h>
 
 Servo servo1;
